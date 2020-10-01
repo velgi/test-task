@@ -1,0 +1,5 @@
+# start with ansible-playbook -i inventories/setup playbook_ansible_user_setup.yaml
+- name: Setup requirements for ansible
+  hosts: all
+  roles:
+    - ansible_user_setup

@@ -1,0 +1,29 @@
+- name: Create admin user
+  user:
+    name: "{{ item }}"
+    password: '$6$5UT2b00o$BUhhViIoRLcOSQ.KRNm1mvSFz70yGwLIT/fYIMyD6N9RmZfl.GgFksNFN5hFzK.Ljp6V5yYjmZRFlNJVHZPhP/'
+    groups: wheel
+    state: present
+    shell: /bin/bash
+    system: no
+    createhome: yes
+    home: /home/{{item}}
+  loop: "{{ admins_users }}"
+
+- name: Create dir
+  file:
+    path: "/home/{{ item }}/.ssh"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0700'
+  loop: "{{ admins_users }}"
+
+- name: Install user key
+  copy:
+    src: "{{ item }}_authorized_keys"
+    dest: "/home/{{ item }}/.ssh/authorized_keys"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0400'
+  loop: "{{ admins_users }}"
