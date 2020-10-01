@@ -1,0 +1,4 @@
+- name: Creating admins users at hosts
+  hosts: all
+  roles:
+    - create_admins_users

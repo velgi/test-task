@@ -1,0 +1,45 @@
+- name: Create ansible user
+  user:
+    name: ansible
+    password: '$6$5UT2b00o$BUhhViIoRLcOSQ.KRNm1mvSFz70yGwLIT/fYIMyD6N9RmZfl.GgFksNFN5hFzK.Ljp6V5yYjmZRFlNJVHZPhP/'
+    groups: wheel
+    state: present
+    shell: /bin/bash
+    system: no
+    createhome: yes
+    home: /home/ansible
+
+- name: Changing sudoers file
+  copy:
+    src: sudoers
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: '440'
+
+- name: Create dir
+  file:
+    path: /home/ansible/.ssh
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0700'
+
+- name: Install ansible key
+  copy:
+    src: ansible_authorized_keys
+    dest: /home/ansible/.ssh/authorized_keys
+    owner: ansible
+    group: ansible
+    mode: '0400'
+
+- name: Setup sshd conf
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - restart sshd
+
