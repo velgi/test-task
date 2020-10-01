@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+ 
+    options {
+        skipDefaultCheckout(true)
+    }
+ 
+    stages {
+        stage('Git') {
+            steps {
+                echo '> Get git file'
+                git([url:"https://github.com/velgi/test-task.git"])
+                }
+        }
+        stage('Changes') {
+            steps {
+                echo '> Edit permissions'
+                dir('ansible') {
+                  sh "chmod 400 ansible.key"
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo '> Test playbook and connect'
+                dir('ansible') {
+                  sh "ansible-playbook --syntax-check playbook_nginx.yaml"
+                  sh "ansible all -m ping"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo '> Run playbook'
+                dir('ansible') {
+                  ansiblePlaybook(
+                    playbook: 'playbook_nginx.yaml'
+                )
+                }
+            }
+        }
+    }
+}
