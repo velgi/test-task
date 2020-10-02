@@ -33,7 +33,7 @@ http {
         server {
           listen       80 default_server;
           listen       [::]:80 default_server;
-          server_name  enginx.k8smd.pp.ua;
+          server_name  {{ inventory_hostname }};
           root         /usr/share/nginx/html;
 
           # Load configuration files for the default server block.
