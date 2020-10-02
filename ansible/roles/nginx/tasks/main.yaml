@@ -26,3 +26,6 @@
     mode: '0644'
   notify:
     - restart nginx
+
+- name: Test nginx
+  shell: "nginx -t"
