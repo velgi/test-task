@@ -12,7 +12,7 @@ pipeline {
                 git([url:"https://github.com/velgi/test-task.git"])
                 }
         }
-        stage('Changes') {
+        stage('Prepare') {
             steps {
                 echo '> Edit permissions'
                 dir('ansible') {
@@ -38,6 +38,12 @@ pipeline {
                 )
                 }
             }
+        }
+        stage('Check') {
+          steps {
+              echo '> Check nginx port available'
+              sh "nc -zvw3 enginx.k8smd.pp.ua 80"
+          }
         }
     }
 }
